@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 function Square({ value, onSquareClick }) {
   return (
@@ -8,31 +8,16 @@ function Square({ value, onSquareClick }) {
   );
 }
 
-function Board({ xIsNext, squares, onPlay }) {
+function Board({ xIsNext, squares, onPlay, status }) {
   function handleClick(i) {
-    if (calculateWinner(squares) || squares[i]) {
-      return;
-    }
+    if (squares[i] || calculateWinner(squares)) return;
     const nextSquares = squares.slice();
-    if (xIsNext) {
-      nextSquares[i] = 'X';
-    } else {
-      nextSquares[i] = 'O';
-    }
+    nextSquares[i] = xIsNext ? "X" : "O";
     onPlay(nextSquares);
-  }
-
-  const winner = calculateWinner(squares);
-  let status;
-  if (winner) {
-    status = 'Winner: ' + winner;
-  } else {
-    status = 'Next player: ' + (xIsNext ? 'X' : 'O');
   }
 
   return (
     <>
-      <div className="status">{status}</div>
       <div className="board-row">
         <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
         <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
@@ -53,19 +38,49 @@ function Board({ xIsNext, squares, onPlay }) {
 }
 
 export default function Game() {
-  const [xIsNext, setXIsNext] = useState(true);
+  const [currentMove, setCurrentMove] = useState(0);
   const [history, setHistory] = useState([Array(9).fill(null)]);
-  const currentSquares = history[history.length - 1];
+  const xIsNext = currentMove % 2 === 0;
+  const squares = history[currentMove];
+
+  const winner = calculateWinner(squares);
+  let status;
+  if (winner) {
+    status = winner + " Wins!";
+  } else {
+    status = "Next player: " + (xIsNext ? "X" : "O");
+  }
 
   function handlePlay(nextSquares) {
-    setHistory([...history, nextSquares]);
-    setXIsNext(!xIsNext);
+    const nextHistory = history.slice(0, currentMove + 1);
+    setHistory([...nextHistory, nextSquares]);
+    setCurrentMove(nextHistory.length);
+  }
+
+  function handleUndo() {
+    if (currentMove > 0) setCurrentMove(currentMove - 1);
+  }
+  function handleRedo() {
+    if (currentMove < history.length - 1) setCurrentMove(currentMove + 1);
   }
 
   return (
     <div className="game">
+      <div className="status">{status}</div>
+      <div className="icon-btn-group">
+        <button onClick={handleUndo} disabled={currentMove === 0} aria-label="Undo" className="icon-btn">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <path d="M7 7V3L2 8l5 5V9c5 0 8.5 2.5 9.5 7.5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+        <button onClick={handleRedo} disabled={currentMove === history.length - 1} aria-label="Redo" className="icon-btn">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <path d="M17 7V3l5 5-5 5V9c-5 0-8.5 2.5-9.5 7.5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+      </div>
       <div className="game-board">
-        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+        <Board xIsNext={xIsNext} squares={squares} onPlay={handlePlay} />
       </div>
       <div className="game-info" />
     </div>
