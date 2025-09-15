@@ -1,4 +1,5 @@
 import { useState } from "react";
+import resetIcon from "./assets/reset-svgrepo-com.svg";
 
 function Square({ value, onSquareClick }) {
   return (
@@ -51,10 +52,18 @@ export default function Game() {
     status = "Next player: " + (xIsNext ? "X" : "O");
   }
 
+  const isDraw = squares.every(Boolean) && !winner;
+  if (isDraw) status = "Draw";
+
   function handlePlay(nextSquares) {
     const nextHistory = history.slice(0, currentMove + 1);
     setHistory([...nextHistory, nextSquares]);
     setCurrentMove(nextHistory.length);
+  }
+
+  function handleReset() {
+    setHistory([Array(9).fill(null)]);
+    setCurrentMove(0);
   }
 
   function handleUndo() {
@@ -70,12 +79,21 @@ export default function Game() {
       <div className="icon-btn-group">
         <button onClick={handleUndo} disabled={currentMove === 0} aria-label="Undo" className="icon-btn">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-            <path d="M7 7V3L2 8l5 5V9c5 0 8.5 2.5 9.5 7.5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <circle cx="12" cy="12" r="10" stroke="#222" strokeWidth="2"/>
+            <polyline points="12 8 8 12 12 16" stroke="#222" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+            <line x1="16" y1="12" x2="8" y2="12" stroke="#222" strokeWidth="2" strokeLinecap="round"/>
           </svg>
         </button>
+        {isDraw && (
+          <button onClick={handleReset} className="icon-btn" aria-label="Reset">
+            <img src={resetIcon} alt="Reset" width="28" height="28" />
+          </button>
+        )}
         <button onClick={handleRedo} disabled={currentMove === history.length - 1} aria-label="Redo" className="icon-btn">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-            <path d="M17 7V3l5 5-5 5V9c-5 0-8.5 2.5-9.5 7.5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <circle cx="12" cy="12" r="10" stroke="#222" strokeWidth="2"/>
+            <polyline points="12 8 16 12 12 16" stroke="#222" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+            <line x1="8" y1="12" x2="16" y2="12" stroke="#222" strokeWidth="2" strokeLinecap="round"/>
           </svg>
         </button>
       </div>
