@@ -6,6 +6,7 @@ body {
   font-family: sans-serif;
   margin: 20px;
   padding: 0;
+  background: #f7f7f7;
 }
 
 h1 {
@@ -46,10 +47,6 @@ ul {
   padding-inline-start: 20px;
 }
 
-* {
-  box-sizing: border-box;
-}
-
 body {
   font-family: sans-serif;
   margin: 20px;
@@ -69,6 +66,13 @@ body {
   padding: 0;
   text-align: center;
   width: 34px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.square:hover,
+.square:focus {
+  background: #e0e0e0;
 }
 
 .board-row:after {
@@ -78,13 +82,60 @@ body {
 }
 
 .status {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
 }
+
 .game {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.game-board {
+  border: 2px solid #bbb;
+  padding: 16px;
+  background: #fff;
+  border-radius: 8px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .game-info {
   margin-left: 20px;
+}
+
+.icon-btn-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 12px;
+}
+
+.icon-btn {
+  background: #666;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-btn:disabled {
+  background: #bbb;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.icon-btn:not(:disabled):hover {
+  background: #444;
+  box-shadow: 0 4px 16px rgba(56, 142, 60, 0.15);
 }
