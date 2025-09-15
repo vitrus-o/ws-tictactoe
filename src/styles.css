@@ -68,6 +68,16 @@ body {
   width: 34px;
   cursor: pointer;
   transition: background 0.2s;
+  color: inherit;
+  position: relative;
+}
+
+.square .x {
+  color: #43a047;
+}
+
+.square .o {
+  color: #fb8c00;
 }
 
 .square:hover,
